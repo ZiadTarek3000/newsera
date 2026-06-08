@@ -11,13 +11,6 @@ export type EmailMessage = {
   text: string;
 };
 
-/**
- * Sends a transactional email via Brevo's HTTP API.
- *
- * When BREVO_API_KEY is not configured, the message (and any embedded link) is
- * logged to the server console instead, so the verification flow stays testable
- * in local development without an email provider.
- */
 export async function sendEmail(message: EmailMessage): Promise<void> {
   if (!hasEmail) {
     console.info(

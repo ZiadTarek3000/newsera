@@ -39,7 +39,6 @@ providers.push(
       const valid = await bcrypt.compare(parsed.data.password, user.password);
       if (!valid) return null;
 
-      // Credential accounts must confirm their email before signing in.
       if (!user.emailVerified) return null;
 
       return {

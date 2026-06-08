@@ -32,7 +32,6 @@ export async function GET() {
       select: { title: true, slug: true, excerpt: true, publishedAt: true },
     });
   } catch {
-    // degrade to an empty feed if the DB is unavailable
   }
 
   const items = articles

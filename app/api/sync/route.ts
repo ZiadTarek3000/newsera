@@ -4,7 +4,6 @@ import { prisma } from "@/lib/db";
 import { hasNews } from "@/lib/env";
 import { fetchCategory, type CurrentsCategory } from "@/lib/api/currents";
 
-// Prisma needs the Node.js runtime; allow up to 60s for the full ingest.
 export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -22,14 +21,13 @@ const SYNC_CATEGORIES: CurrentsCategory[] = [
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Fetch every category from Currents and upsert the articles. */
 async function ingest() {
   let upserts = 0;
   const errors: string[] = [];
 
   for (const category of SYNC_CATEGORIES) {
     try {
-      await sleep(300); // gentle pacing to avoid Currents burst rejections
+      await sleep(300);
       const articles = await fetchCategory(category, 10);
       const cat = await prisma.category.upsert({
         where: { slug: category },
@@ -71,7 +69,6 @@ async function ingest() {
           });
           upserts++;
         } catch {
-          // Skip individual article failures (e.g. slug collisions).
         }
       }
     } catch (error) {
@@ -93,11 +90,6 @@ async function runSync() {
   return NextResponse.json({ ok: true, upserts, errors });
 }
 
-/**
- * Scheduled ingest, triggered by Vercel Cron.
- * Vercel automatically sends `Authorization: Bearer <CRON_SECRET>` when the
- * CRON_SECRET env var is set, so we require it here.
- */
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret) {
@@ -112,7 +104,6 @@ export async function GET(req: NextRequest) {
   return runSync();
 }
 
-/** Manual ingest, triggered by a signed-in admin. */
 export async function POST() {
   const user = await getCurrentUser();
   if (!user) {

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-/** Thin bar at the very top showing how far the page has been scrolled. */
 export default function ScrollProgress() {
   const [progress, setProgress] = useState(0);
 

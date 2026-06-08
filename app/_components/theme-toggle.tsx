@@ -7,7 +7,6 @@ type ThemeToggleProps = {
   className?: string;
 };
 
-/** Toggles light/dark. Renders a theme-agnostic icon (no hydration mismatch). */
 export default function ThemeToggle({ className }: ThemeToggleProps) {
   const { resolvedTheme, setTheme } = useTheme();
 

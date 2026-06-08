@@ -15,17 +15,14 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background text-on-background">
-      {/* Ambient background texture */}
       <div className="bg-auth-radial absolute inset-0 z-0 opacity-80" />
       <div
         className="absolute inset-0 z-0 opacity-[0.03]"
         style={{ backgroundImage: CROSS_TEXTURE }}
       />
 
-      {/* Login card */}
       <main className="relative z-10 w-full max-w-md px-6 py-12">
         <div className="glass-panel animate-rise-in flex flex-col items-center rounded-lg p-8">
-          {/* Brand anchor */}
           <div className="mb-12 w-full text-center">
             <h1 className="mb-1 text-[48px] leading-[1.1] tracking-[-0.02em]">
               <Logo />
@@ -35,7 +32,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Login form */}
           <form action={formAction} className="flex w-full flex-col gap-3">
             {state?.message && (
               <p
@@ -49,7 +45,6 @@ export default function LoginPage() {
                 {state.message}
               </p>
             )}
-            {/* Email */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="email"
@@ -75,7 +70,6 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Password */}
             <div className="mt-1 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <label
@@ -119,7 +113,6 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Action button */}
             <button
               type="submit"
               disabled={pending}
@@ -135,7 +128,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Separation / alternative login */}
           <div className="my-6 flex w-full items-center gap-4">
             <div className="flex-1 border-t border-outline-variant/50" />
             <span className="text-[14px] font-medium text-on-surface-variant">
@@ -144,7 +136,6 @@ export default function LoginPage() {
             <div className="flex-1 border-t border-outline-variant/50" />
           </div>
 
-          {/* Sign up link */}
           <div className="w-full text-center">
             <p className="text-[14px] font-medium text-on-surface-variant">
               Don&apos;t have an account?{" "}
@@ -158,7 +149,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Footer / legal */}
         <div className="mt-12 text-center">
           <p className="text-[12px] uppercase tracking-[0.08em] text-on-surface-variant/70">
             © 2024 Newsera ·{" "}
@@ -175,8 +165,6 @@ export default function LoginPage() {
     </div>
   );
 }
-
-/* --- Inline icons (matching the Material Symbols used in the design) --- */
 
 function MailIcon() {
   return (

@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-// Optimistic, cookie-only auth checks (Next 16 "Proxy", formerly Middleware).
-// Secure verification still happens in the DAL (requireUser) close to the data.
 const PROTECTED = ["/dashboard"];
 const AUTH_PAGES = ["/login", "/register"];
 

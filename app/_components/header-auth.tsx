@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
-/** Session-aware control for public headers: avatar when signed in, else a Sign in link. */
 export default function HeaderAuth() {
   const { data: session, status } = useSession();
 

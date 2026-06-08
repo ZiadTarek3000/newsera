@@ -8,7 +8,6 @@ const footerLinks = [
   { label: "Privacy", href: "/privacy" },
 ];
 
-/** Compact footer used across the app/reading experience (dashboard, article). */
 export default function AppFooter() {
   return (
     <footer className="w-full border-t border-outline-variant bg-surface-container-low py-16">

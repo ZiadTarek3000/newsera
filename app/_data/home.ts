@@ -1,14 +1,8 @@
-/**
- * Placeholder content for the home page. This will be replaced by a real data
- * source (e.g. a news API) later; the shapes are kept simple for that swap.
- */
-
 export type Article = {
   category: string;
   title: string;
   excerpt: string;
   source: string;
-  /** Display string — absolute date or relative ("2 hrs ago"). */
   date: string;
   image: string;
   alt: string;

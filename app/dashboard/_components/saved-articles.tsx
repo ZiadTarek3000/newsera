@@ -20,7 +20,7 @@ export default function SavedArticles({ articles }: SavedArticlesProps) {
 
   const remove = (id: string) => {
     setRemoving((prev) => [...prev, id]);
-    storeToggle(id); // keep the global store in sync
+    storeToggle(id);
     void toggleBookmark(id);
     setTimeout(() => {
       setItems((prev) => prev.filter((a) => a.id !== id));

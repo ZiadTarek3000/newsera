@@ -3,7 +3,6 @@ import type { EmailMessage } from "@/lib/email/send";
 
 const BRAND = "#4648d4";
 
-/** Builds the account-verification email (HTML + plain-text fallback). */
 export function verificationEmail({
   to,
   name,

@@ -11,11 +11,8 @@ export type AuthFormState =
   | {
       errors?: Record<string, string[]>;
       message?: string;
-      /** Set after a successful registration: show the "check your inbox" panel. */
       success?: boolean;
-      /** Set when login is blocked because the email isn't verified yet. */
       unverified?: boolean;
-      /** The email involved, so the UI can offer to resend the verification link. */
       email?: string;
     }
   | undefined;
@@ -58,8 +55,6 @@ export async function registerAction(
     data: { name, email, password: hashedPassword, preferences: { create: {} } },
   });
 
-  // Send the confirmation email immediately. A delivery failure must not lose
-  // the account — the user can request a fresh link from the login screen.
   try {
     await sendVerificationEmail({ email, name });
   } catch (error) {
@@ -86,9 +81,6 @@ export async function loginAction(
 
   const { email, password } = parsed.data;
 
-  // Surface a clear, actionable message for unverified accounts (with a resend
-  // option) — but only to someone who proves they own the credentials, so we
-  // don't leak account/verification status to others.
   const user = await prisma.user.findUnique({ where: { email } });
   if (user?.password && !user.emailVerified) {
     const valid = await bcrypt.compare(password, user.password);
@@ -111,7 +103,7 @@ export async function loginAction(
     if (error instanceof AuthError) {
       return { message: "Invalid email or password." };
     }
-    throw error; // re-throw redirect
+    throw error;
   }
   return undefined;
 }
@@ -120,11 +112,6 @@ const resendSchema = z.object({
   email: z.string().email("Enter a valid email address."),
 });
 
-/**
- * Re-sends the verification email for an unverified account. Always reports
- * success regardless of whether the account exists or is already verified, to
- * avoid leaking which emails are registered.
- */
 export async function resendVerificationAction(
   _prev: AuthFormState,
   formData: FormData,

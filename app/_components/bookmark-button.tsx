@@ -9,13 +9,10 @@ import { BookmarkIcon } from "./icons";
 
 type BookmarkButtonProps = {
   articleId: string;
-  /** Classes for the button (positioning + base color). */
   className?: string;
-  /** Classes for the icon (size). */
   iconClassName?: string;
 };
 
-/** Optimistic bookmark toggle. Redirects guests to /login. */
 export default function BookmarkButton({
   articleId,
   className,
@@ -36,10 +33,10 @@ export default function BookmarkButton({
       return;
     }
 
-    toggle(articleId); // optimistic
+    toggle(articleId);
     startTransition(async () => {
       const res = await toggleBookmark(articleId);
-      if ("error" in res) toggle(articleId); // revert on failure
+      if ("error" in res) toggle(articleId);
     });
   }
 

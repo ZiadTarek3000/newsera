@@ -57,7 +57,6 @@ export async function getUserHistory(
   }
 }
 
-/** Suggestions from the user's favorite categories (or trending), unbookmarked. */
 export async function getDashboardSuggestions(
   userId: string,
   take = 3,

@@ -1,9 +1,3 @@
-/**
- * Inline icon set (Lucide-style strokes) standing in for the Material Symbols
- * used across the Newsera design. Each accepts a `className` to control
- * size (e.g. `size-6`) and color (via `currentColor`).
- */
-
 type IconProps = {
   className?: string;
 };

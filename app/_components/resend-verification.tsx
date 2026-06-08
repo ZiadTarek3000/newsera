@@ -4,7 +4,6 @@ import { useActionState } from "react";
 import { resendVerificationAction } from "@/lib/actions/auth";
 
 type Props = {
-  /** When provided, the email is fixed and submitted via a hidden field. */
   email?: string;
   className?: string;
 };

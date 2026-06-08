@@ -2,7 +2,6 @@ type LogoProps = {
   className?: string;
 };
 
-/** The Newsera wordmark, set in the brand serif (Playfair Display). */
 export default function Logo({ className }: LogoProps) {
   return (
     <span

@@ -1,8 +1,3 @@
-/**
- * Placeholder content for the article (long-read) page. A real implementation
- * would load this per-slug from a CMS / news source.
- */
-
 export const article = {
   badge: "Long Read / Analysis",
   title:

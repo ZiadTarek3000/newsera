@@ -47,7 +47,6 @@ export async function generateMetadata({
   };
 }
 
-/** Splits stored content into heading/paragraph blocks. */
 function renderBlocks(content: string) {
   const blocks = content
     .split(/\n{2,}/)
@@ -117,7 +116,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <RecordView articleId={article.id} />
 
       <main className="pt-20">
-        {/* Hero */}
         <header className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
           <Image
             src={article.image}
@@ -160,7 +158,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </header>
 
-        {/* Article content */}
         <article className="mx-auto max-w-3xl px-6 py-24">
           {article.takeaways.length > 0 && (
             <Reveal>
@@ -185,7 +182,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="relative space-y-12 text-on-surface">
             {renderBlocks(article.content)}
 
-            {/* Preview fade + CTA */}
             {article.sourceUrl && (
               <div className="relative mt-12">
                 <div className="pointer-events-none absolute bottom-full left-0 h-32 w-full bg-gradient-to-t from-background to-transparent" />
@@ -211,7 +207,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </article>
 
-        {/* Further Analysis */}
         {related.length > 0 && (
           <section className="bg-surface-container py-24">
             <div className="mx-auto max-w-[1280px] px-8">
@@ -256,7 +251,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </section>
         )}
 
-        {/* Recommended for You */}
         {recommended.length > 0 && (
           <section className="overflow-hidden bg-background py-24">
             <div className="mx-auto max-w-[1280px] px-8">

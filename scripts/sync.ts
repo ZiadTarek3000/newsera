@@ -3,10 +3,6 @@ import { z } from "zod";
 import { prisma } from "../lib/db";
 import { slugify } from "../lib/utils";
 
-// Standalone Currents API ingest. Mirrors app/api/sync/route.ts but runs from the
-// CLI (`npm run sync`) without an admin HTTP session. The currents lib is
-// `server-only` and can't be imported here, so the fetch/normalize logic is inlined.
-
 const CURRENTS_BASE = "https://api.currentsapi.services/v1";
 
 const SYNC_CATEGORIES = [
@@ -39,7 +35,6 @@ const responseSchema = z.object({
   message: z.string().optional(),
 });
 
-/** Stable short hash so similar titles get distinct slugs. */
 function shortHash(input: string) {
   let h = 0;
   for (let i = 0; i < input.length; i++) {
@@ -75,7 +70,6 @@ async function fetchCategory(category: Category, max = 10, attempt = 1): Promise
   });
   const json = responseSchema.parse(await res.json());
   if (!res.ok || json.status !== "ok") {
-    // Currents intermittently 400s/429s under bursts — retry once after a pause.
     if (attempt < 2) {
       await sleep(1500);
       return fetchCategory(category, max, attempt + 1);
@@ -120,7 +114,7 @@ async function run() {
 
   for (const category of SYNC_CATEGORIES) {
     try {
-      await sleep(300); // gentle pacing to avoid burst rejections
+      await sleep(300);
       const articles = await fetchCategory(category, 10);
       const cat = await prisma.category.upsert({
         where: { slug: category },
@@ -162,7 +156,6 @@ async function run() {
           });
           upserts++;
         } catch {
-          // Skip individual article failures (e.g. slug collisions).
         }
       }
       console.log(`  ${category}: ${articles.length} fetched`);

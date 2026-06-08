@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/dal";
 
-/** Article ids the current user has bookmarked (empty for guests). */
 export async function getMyBookmarkIds(): Promise<string[]> {
   const user = await getCurrentUser();
   if (!user) return [];

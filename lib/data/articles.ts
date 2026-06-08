@@ -45,7 +45,6 @@ const EMPTY_FEED: HomeFeed = {
   businessBriefs: [],
 };
 
-/** Everything the home page needs, in one resilient call. */
 export async function getHomeFeed(): Promise<HomeFeed> {
   try {
     const [featuredHome, featuredAnalysis, recent, trending, briefs] =
@@ -141,7 +140,6 @@ export async function getArticleBySlug(
   }
 }
 
-/** Same-category, most-recent articles excluding the current one. */
 export async function getRelated(
   article: Pick<ArticleSummary, "id" | "category">,
   take = 3,
@@ -163,7 +161,6 @@ export async function getRelated(
   }
 }
 
-/** Lightweight recommendations: trending then recent, excluding the current. */
 export async function getRecommended(
   excludeId: string,
   take = 3,
@@ -182,7 +179,6 @@ export async function getRecommended(
   }
 }
 
-/** Slugs for static generation of article pages. */
 export async function getAllArticleSlugs(): Promise<string[]> {
   try {
     const rows = await prisma.article.findMany({ select: { slug: true } });

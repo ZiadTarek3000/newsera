@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useBookmarkStore } from "@/store/bookmark-store";
 import { getMyBookmarkIds } from "@/lib/actions/bookmarks";
 
-/** Loads the signed-in user's bookmarks into the global store once. */
 export default function BookmarkHydrator() {
   const { status } = useSession();
   const setAll = useBookmarkStore((s) => s.setAll);

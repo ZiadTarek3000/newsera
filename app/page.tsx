@@ -10,7 +10,6 @@ import TrendingCarousel from "./_components/trending-carousel";
 import { ArrowRightIcon, ChevronDownIcon, MailIcon } from "./_components/icons";
 import { getHomeFeed } from "@/lib/data/articles";
 
-// Incrementally re-render the home feed every 5 minutes.
 export const revalidate = 300;
 
 export default async function Home() {
@@ -23,7 +22,6 @@ export default async function Home() {
       <SiteHeader />
 
       <main className="pt-20">
-        {/* Hero */}
         <section className="relative flex min-h-[80vh] w-full items-center overflow-hidden bg-surface-container-lowest">
           {hero ? (
             <div className="animate-fade-up mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-12 px-8 py-16 lg:grid-cols-12">
@@ -96,10 +94,8 @@ export default async function Home() {
           )}
         </section>
 
-        {/* Trending */}
         {trending.length > 0 && <TrendingCarousel articles={trending} />}
 
-        {/* Latest Updates */}
         <section className="animate-fade-up mx-auto max-w-[1440px] px-8 py-32 delay-300">
           <div className="mb-12 border-b border-outline-variant pb-6">
             <h2 className="font-serif text-[32px] font-semibold">
@@ -130,11 +126,9 @@ export default async function Home() {
           )}
         </section>
 
-        {/* Category Highlights */}
         {(businessBriefs.length > 0 || analysis) && (
           <section className="animate-fade-up bg-surface-container-highest py-24 delay-400">
             <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-20 px-8 lg:grid-cols-2">
-              {/* Business & Economy */}
               <div>
                 <div className="mb-8 flex items-center justify-between">
                   <h2 className="font-serif text-[40px] font-bold italic">
@@ -168,7 +162,6 @@ export default async function Home() {
                 </div>
               </div>
 
-              {/* Analysis (visual lead) */}
               {analysis && (
                 <div className="flex transform flex-col rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-12 shadow-md transition-transform duration-500 hover:-translate-y-1">
                   <div className="mb-6 flex items-start justify-between">
@@ -222,7 +215,6 @@ export default async function Home() {
           </section>
         )}
 
-        {/* Newsletter CTA */}
         <section className="animate-fade-up bg-surface py-32 text-on-surface">
           <div className="mx-auto max-w-[720px] px-8 text-center">
             <MailIcon className="mx-auto mb-6 block size-12 text-primary" />

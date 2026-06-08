@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Class-based dark mode (toggled by next-themes), not prefers-color-scheme. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -16,9 +15,7 @@
   --font-serif: var(--font-playfair);
 }
 
-/* --- Newsera design system (Material 3 token palette) --- */
 @theme {
-  /* Primary */
   --color-primary: #4648d4;
   --color-on-primary: #ffffff;
   --color-primary-container: #6063ee;
@@ -29,7 +26,6 @@
   --color-on-primary-fixed-variant: #2f2ebe;
   --color-inverse-primary: #c0c1ff;
 
-  /* Secondary */
   --color-secondary: #6b38d4;
   --color-on-secondary: #ffffff;
   --color-secondary-container: #8455ef;
@@ -39,7 +35,6 @@
   --color-on-secondary-fixed: #23005c;
   --color-on-secondary-fixed-variant: #5516be;
 
-  /* Tertiary */
   --color-tertiary: #7e3000;
   --color-on-tertiary: #ffffff;
   --color-tertiary-container: #a44100;
@@ -49,13 +44,11 @@
   --color-on-tertiary-fixed: #351000;
   --color-on-tertiary-fixed-variant: #7b2f00;
 
-  /* Error */
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
-  /* Surfaces */
   --color-surface: #fcf8ff;
   --color-surface-dim: #dcd8e5;
   --color-surface-bright: #fcf8ff;
@@ -71,20 +64,15 @@
   --color-inverse-surface: #302f39;
   --color-inverse-on-surface: #f3effc;
 
-  /* Outline & background */
   --color-outline: #777587;
   --color-outline-variant: #c7c4d8;
   --color-on-background: #1b1b24;
 }
 
-/* ---------- Dark theme (derived Material 3 dark palette) ----------
-   Every component uses semantic tokens, so overriding the custom properties
-   here flips the entire app. */
 .dark {
   --background: #131318;
   --foreground: #e5e1e9;
 
-  /* Primary */
   --color-primary: #c0c1ff;
   --color-on-primary: #15179b;
   --color-primary-container: #2f2ebe;
@@ -95,19 +83,16 @@
   --color-on-primary-fixed-variant: #a9a9ff;
   --color-inverse-primary: #4648d4;
 
-  /* Secondary */
   --color-secondary: #d0bcff;
   --color-on-secondary: #381e72;
   --color-secondary-container: #4f378b;
   --color-on-secondary-container: #eaddff;
 
-  /* Error */
   --color-error: #ffb4ab;
   --color-on-error: #690005;
   --color-error-container: #93000a;
   --color-on-error-container: #ffdad6;
 
-  /* Surfaces */
   --color-background: #131318;
   --color-on-background: #e5e1e9;
   --color-surface: #131318;
@@ -125,7 +110,6 @@
   --color-inverse-surface: #e5e1e9;
   --color-inverse-on-surface: #303038;
 
-  /* Outline */
   --color-outline: #918f9a;
   --color-outline-variant: #46464f;
 }
@@ -136,7 +120,35 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Frosted card used on auth pages */
+::selection {
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+}
+
+@media (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-outline-variant);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--color-outline);
+    background-clip: content-box;
+  }
+}
+
 .glass-panel {
   background: rgba(252, 248, 255, 0.85);
   backdrop-filter: blur(16px);
@@ -144,8 +156,12 @@ body {
   border: 1px solid rgba(199, 196, 216, 0.4);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
+.dark .glass-panel {
+  background: rgba(20, 19, 24, 0.72);
+  border-color: rgba(70, 70, 79, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
 
-/* Ambient radial wash: surface-container-high → background → surface-container-low */
 .bg-auth-radial {
   background-image: radial-gradient(
     circle at top right,
@@ -154,8 +170,15 @@ body {
     #f5f2ff
   );
 }
+.dark .bg-auth-radial {
+  background-image: radial-gradient(
+    circle at top right,
+    #1f1f25,
+    #131318,
+    #0e0e13
+  );
+}
 
-/* Hide scrollbar (used by horizontal carousels) */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -164,7 +187,6 @@ body {
   scrollbar-width: none;
 }
 
-/* Article card lift + inner image zoom on hover */
 .article-card-hover {
   transition:
     transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
@@ -183,7 +205,6 @@ body {
   transform: scale(1.05);
 }
 
-/* Section fade-up on load */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -211,7 +232,6 @@ body {
   animation-delay: 400ms;
 }
 
-/* Reading-history timeline items fade/slide in on load */
 @keyframes fadeInSlideUp {
   from {
     opacity: 0;
@@ -236,26 +256,23 @@ body {
   animation-delay: 0.3s;
 }
 
-/* Scroll-reveal: hidden until its wrapper enters the viewport */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(20px);
   transition:
     opacity 0.8s ease-out,
     transform 0.8s ease-out;
+  will-change: opacity, transform;
 }
 .reveal-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
-/* ---------- UX polish: motion, focus, micro-interactions ---------- */
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Consistent, accessible keyboard focus across the app. Form fields keep their
-   own focus ring, so we suppress the extra outline there. */
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -266,8 +283,6 @@ select:focus-visible {
   outline: none;
 }
 
-/* Subtle page fade between route navigations. Opacity only — a transform here
-   would break position:fixed headers during the animation. */
 @keyframes pageIn {
   from {
     opacity: 0;
@@ -280,7 +295,6 @@ select:focus-visible {
   animation: pageIn 0.35s ease both;
 }
 
-/* Card / panel entrance */
 @keyframes riseIn {
   from {
     opacity: 0;
@@ -295,7 +309,6 @@ select:focus-visible {
   animation: riseIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Animated underline that grows from the left on hover (nav & footer links) */
 .link-underline {
   position: relative;
 }

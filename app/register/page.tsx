@@ -12,7 +12,6 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-grow items-center justify-center bg-background p-6 text-on-background">
       <div className="animate-rise-in w-full max-w-[480px] rounded-lg border border-outline-variant/30 bg-surface-container-lowest p-12 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
-        {/* Header */}
         <header className="mb-12 text-center">
           <h1 className="mb-1 text-[48px] leading-[1.1]">
             <Logo className="uppercase" />
@@ -25,7 +24,6 @@ export default function RegisterPage() {
         </header>
 
         {state?.success ? (
-          /* Post-registration: confirm-your-email panel */
           <div className="space-y-6 text-center">
             <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
               <MailCheckIcon />
@@ -59,7 +57,6 @@ export default function RegisterPage() {
           </div>
         ) : (
           <div className="space-y-6">
-          {/* Social login (own server-action form) */}
           <div className="flex flex-col gap-3">
             <form action={googleLogin} className="contents">
               <button
@@ -74,7 +71,6 @@ export default function RegisterPage() {
             </form>
           </div>
 
-          {/* Divider */}
           <div className="flex items-center gap-4">
             <hr className="flex-grow border-t border-outline-variant/50" />
             <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-on-surface-variant">
@@ -83,7 +79,6 @@ export default function RegisterPage() {
             <hr className="flex-grow border-t border-outline-variant/50" />
           </div>
 
-          {/* Credentials form */}
           <form action={formAction} className="space-y-6">
             {state?.message && (
               <p
@@ -160,7 +155,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Terms */}
             <div className="flex items-start gap-3">
               <div className="flex h-5 items-center">
                 <input
@@ -187,7 +181,6 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={pending}
@@ -200,7 +193,6 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Footer */}
         <footer className="mt-12 text-center">
           <p className="text-[16px] leading-[1.6] text-on-surface-variant">
             Already have an account?{" "}
@@ -217,8 +209,6 @@ export default function RegisterPage() {
     </div>
   );
 }
-
-/* --- Inline icons --- */
 
 function MailCheckIcon() {
   return (

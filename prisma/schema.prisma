@@ -1,14 +1,9 @@
-// Newsera — Prisma schema (Postgres / Supabase)
-// Auth.js adapter models + app domain models.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // Connection URLs live in prisma.config.ts (Prisma 7); the runtime client
-  // connects via the pg driver adapter in lib/db.ts.
 }
 
 enum Role {
@@ -16,15 +11,13 @@ enum Role {
   ADMIN
 }
 
-// ---------- Auth.js (NextAuth) adapter models ----------
-
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  password      String? // only set for credential (email/password) accounts
+  password      String?
   role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -74,8 +67,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ---------- App domain models ----------
-
 model Category {
   id       String    @id @default(cuid())
   name     String    @unique
@@ -85,18 +76,18 @@ model Category {
 
 model Article {
   id          String    @id @default(cuid())
-  externalId  String?   @unique // NewsAPI article id / source url hash
+  externalId  String?   @unique
   source      String
   title       String
   slug        String    @unique
   excerpt     String?
   content     String?
-  url         String? // link to the original article at the source
+  url         String?
   imageUrl    String?
   publishedAt DateTime?
   author      String?
   views       Int       @default(0)
-  takeaways   String[]  @default([]) // optional editorial/AI highlights
+  takeaways   String[]  @default([])
   createdAt   DateTime  @default(now())
 
   categoryId String?
@@ -128,7 +119,7 @@ model ReadingHistory {
   userId    String
   articleId String
   viewedAt  DateTime @default(now())
-  progress  Int      @default(0) // 0-100 % read
+  progress  Int      @default(0)
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
@@ -140,7 +131,7 @@ model ReadingHistory {
 model UserPreferences {
   id                 String   @id @default(cuid())
   userId             String   @unique
-  theme              String   @default("system") // "light" | "dark" | "system"
+  theme              String   @default("system")
   favoriteCategories String[]
   dailyBriefing      Boolean  @default(true)
   updatedAt          DateTime @updatedAt
@@ -151,7 +142,7 @@ model UserPreferences {
 model FeaturedArticle {
   id        String   @id @default(cuid())
   articleId String   @unique
-  section   String   @default("home") // home | analysis | trending
+  section   String   @default("home")
   priority  Int      @default(0)
   createdAt DateTime @default(now())
 

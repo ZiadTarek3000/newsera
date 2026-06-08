@@ -49,7 +49,6 @@ export default async function DashboardPage() {
       <DashboardHeader user={user} />
 
       <main className="mx-auto min-h-screen max-w-[1280px] px-5 pb-24 pt-32 md:px-16">
-        {/* Dashboard heading */}
         <section className="mb-12">
           <h1 className="mb-2 font-serif text-[40px] font-bold leading-[1.2] tracking-[-0.02em] text-on-surface md:text-[64px] md:leading-[1.1]">
             Member Dashboard
@@ -59,11 +58,9 @@ export default async function DashboardPage() {
           </p>
         </section>
 
-        {/* Bento layout */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <SavedArticles articles={bookmarks} />
 
-          {/* Reading History */}
           <div className="lg:col-span-4">
             <div className="h-full rounded-xl border border-outline-variant/20 bg-surface-container-low p-8">
               <h2 className="mb-6 flex items-center gap-2 font-serif text-[24px] font-semibold">
@@ -108,7 +105,6 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Suggested for You */}
         {suggestions.length > 0 && (
           <section className="mt-20">
             <h2 className="mb-6 flex items-center gap-2 font-serif text-[28px] font-semibold">
@@ -162,7 +158,6 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        {/* Platform Preferences */}
         <section className="mt-20">
           <h2 className="mb-6 flex items-center gap-2 font-serif text-[28px] font-semibold">
             <SettingsIcon className="size-6 text-secondary" />

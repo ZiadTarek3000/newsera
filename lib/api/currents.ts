@@ -5,7 +5,6 @@ import { slugify } from "@/lib/utils";
 
 const CURRENTS_BASE = "https://api.currentsapi.services/v1";
 
-// Categories supported by Currents API /search.
 export const CURRENTS_CATEGORIES = [
   "general",
   "world",
@@ -25,7 +24,7 @@ const articleSchema = z.object({
   description: z.string().nullish(),
   url: z.string(),
   author: z.string().nullish(),
-  image: z.string().nullish(), // a real URL, or the literal "None"
+  image: z.string().nullish(),
   category: z.array(z.string()).nullish(),
   published: z.string(),
 });
@@ -50,7 +49,6 @@ export type NormalizedArticle = {
   categorySlug: string;
 };
 
-/** Stable short hash so distinct articles with similar titles get unique slugs. */
 function shortHash(input: string) {
   let h = 0;
   for (let i = 0; i < input.length; i++) {
@@ -59,19 +57,16 @@ function shortHash(input: string) {
   return Math.abs(h).toString(36).slice(0, 6);
 }
 
-/** Currents publishes dates like "2026-06-08 07:47:41 +0000". */
 function parsePublished(value: string): Date {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? new Date() : d;
 }
 
-/** Currents uses the string "None" when an article has no image. */
 function cleanImage(image: string | null | undefined): string | null {
   if (!image || image === "None") return null;
   return image;
 }
 
-/** Derives a readable source name from the article URL host. */
 function sourceFromUrl(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -104,7 +99,6 @@ function normalize(
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Fetch + normalize the latest articles for a single Currents category. */
 export async function fetchCategory(
   category: CurrentsCategory,
   max = 10,
@@ -119,12 +113,10 @@ export async function fetchCategory(
   });
 
   const res = await fetch(`${CURRENTS_BASE}/search?${params.toString()}`, {
-    // Always fetch fresh during a sync run.
     cache: "no-store",
   });
   const json = responseSchema.parse(await res.json());
   if (!res.ok || json.status !== "ok") {
-    // Currents intermittently 400s/429s under bursts — retry once after a pause.
     if (attempt < 2) {
       await sleep(1500);
       return fetchCategory(category, max, attempt + 1);

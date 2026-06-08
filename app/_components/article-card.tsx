@@ -7,7 +7,6 @@ type ArticleCardProps = {
   article: ArticleSummary;
 };
 
-/** Vertical article card used in the "Latest Updates" grid. */
 export default function ArticleCard({ article }: ArticleCardProps) {
   return (
     <article className="article-card-hover group flex h-full flex-col overflow-hidden rounded-xl bg-surface-container-lowest p-2">

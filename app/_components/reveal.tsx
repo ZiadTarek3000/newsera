@@ -7,11 +7,6 @@ type RevealProps = {
   className?: string;
 };
 
-/**
- * Wraps content that should fade/slide into view as it enters the viewport.
- * Falls back to immediately visible when IntersectionObserver is unavailable
- * or the user prefers reduced motion.
- */
 export default function Reveal({ children, className }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -20,8 +15,6 @@ export default function Reveal({ children, className }: RevealProps) {
     const el = ref.current;
     if (!el) return;
 
-    // No IntersectionObserver: reveal on the next frame (reduced-motion users
-    // are handled in CSS, which makes .reveal-on-scroll visible immediately).
     if (typeof IntersectionObserver === "undefined") {
       const id = requestAnimationFrame(() => setVisible(true));
       return () => cancelAnimationFrame(id);

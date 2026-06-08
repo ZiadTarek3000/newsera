@@ -7,7 +7,6 @@ type BookmarkState = {
   toggle: (id: string) => void;
 };
 
-/** Global, optimistic set of the current user's bookmarked article ids. */
 export const useBookmarkStore = create<BookmarkState>((set) => ({
   ids: new Set<string>(),
   hydrated: false,

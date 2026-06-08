@@ -14,7 +14,6 @@ export default function SiteHeader() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-outline-variant/30 bg-surface/80 shadow-sm backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-8">
-        {/* Brand */}
         <Link
           href="/"
           className="font-serif text-[32px] font-bold tracking-tight text-on-surface transition-colors hover:text-primary"
@@ -22,7 +21,6 @@ export default function SiteHeader() {
           NEWSERA
         </Link>
 
-        {/* Navigation (desktop) */}
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <a
@@ -39,7 +37,6 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        {/* Actions */}
         <div className="flex items-center gap-6">
           <button
             type="button"

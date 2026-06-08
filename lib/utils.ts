@@ -1,9 +1,7 @@
-/** Join truthy class names. */
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-/** URL-safe slug from arbitrary text. */
 export function slugify(input: string) {
   return input
     .toLowerCase()
@@ -14,7 +12,6 @@ export function slugify(input: string) {
     .slice(0, 80);
 }
 
-/** Absolute display date, e.g. "Nov 14, 2024". */
 export function formatDate(date: Date | string | null | undefined) {
   if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
@@ -26,7 +23,6 @@ export function formatDate(date: Date | string | null | undefined) {
   });
 }
 
-/** Relative time, e.g. "2 hrs ago" / "Yesterday". */
 export function relativeTime(date: Date | string | null | undefined, now = new Date()) {
   if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
@@ -43,7 +39,6 @@ export function relativeTime(date: Date | string | null | undefined, now = new D
   return formatDate(d);
 }
 
-/** Rough reading time from word count (~225 wpm), e.g. "8 Min Read". */
 export function estimateReadTime(text: string | null | undefined) {
   const words = (text ?? "").trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(words / 225));

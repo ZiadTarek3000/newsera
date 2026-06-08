@@ -5,13 +5,8 @@ import { env } from "@/lib/env";
 import { sendEmail } from "@/lib/email/send";
 import { verificationEmail } from "@/lib/email/templates";
 
-const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
-/**
- * Issues a fresh email-verification token for an address, replacing any
- * outstanding tokens, and emails the confirmation link. Reuses Auth.js's
- * VerificationToken table (identifier = email).
- */
 export async function sendVerificationEmail(user: {
   email: string;
   name: string | null;
@@ -19,7 +14,6 @@ export async function sendVerificationEmail(user: {
   const token = randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + TOKEN_TTL_MS);
 
-  // One outstanding token per email.
   await prisma.verificationToken.deleteMany({
     where: { identifier: user.email },
   });
@@ -33,10 +27,6 @@ export async function sendVerificationEmail(user: {
 
 export type VerificationResult = "verified" | "already" | "expired" | "invalid";
 
-/**
- * Validates a verification token and, if valid, marks the user's email as
- * verified. Consumes the token in all terminal cases.
- */
 export async function verifyEmailToken(
   token: string | undefined,
 ): Promise<VerificationResult> {
@@ -47,7 +37,6 @@ export async function verifyEmailToken(
   });
   if (!record) return "invalid";
 
-  // Token found — it is single-use, so remove it now.
   await prisma.verificationToken.deleteMany({ where: { token } });
 
   if (record.expires < new Date()) return "expired";

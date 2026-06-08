@@ -3,10 +3,6 @@
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth/dal";
 
-/**
- * Records an article view: bumps the view counter for everyone, and upserts a
- * reading-history entry for signed-in users.
- */
 export async function recordView(articleId: string, progress = 0) {
   await prisma.article
     .update({ where: { id: articleId }, data: { views: { increment: 1 } } })

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-/** Newsletter sign-up — UI only for now; shows a confirmation on submit. */
 export default function NewsletterForm() {
   const [subscribed, setSubscribed] = useState(false);
 

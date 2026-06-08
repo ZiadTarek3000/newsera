@@ -1,8 +1,3 @@
-/**
- * Placeholder content for the member dashboard. To be replaced by per-user
- * data (saved articles, reading history, recommendations) from a real backend.
- */
-
 export type SavedArticle = {
   id: string;
   category: string;

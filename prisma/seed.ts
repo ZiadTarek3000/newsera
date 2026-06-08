@@ -97,7 +97,6 @@ function main() {
 async function run() {
   const items = main();
 
-  // Dedupe by slug (skip empties / collisions).
   const bySlug = new Map<string, SeedArticle>();
   for (const it of items) {
     const slug = slugify(it.title);
@@ -105,7 +104,6 @@ async function run() {
     bySlug.set(slug, it);
   }
 
-  // Categories.
   const catNames = new Set<string>([
     "Top Headlines",
     "Business",
@@ -133,7 +131,6 @@ async function run() {
     categoryIdBySlug.set(slug, cat.id);
   }
 
-  // Articles.
   const entries = [...bySlug.entries()];
   let i = 0;
   for (const [slug, it] of entries) {
@@ -160,7 +157,6 @@ async function run() {
     i++;
   }
 
-  // Featured (hero + analysis).
   const heroArt = await prisma.article.findUnique({
     where: { slug: slugify(heroArticle.title) },
   });

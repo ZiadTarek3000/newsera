@@ -36,7 +36,6 @@ export default function PreferencesPanel({
 
   return (
     <>
-      {/* Topic Interests */}
       <div className="rounded-lg border border-outline-variant/30 bg-surface-container-low p-8">
         <h3 className="mb-3 text-[16px] font-medium uppercase tracking-[0.1em] text-on-surface-variant">
           Topic Interests
@@ -59,7 +58,6 @@ export default function PreferencesPanel({
         </div>
       </div>
 
-      {/* Notifications */}
       <div className="rounded-lg border border-outline-variant/30 bg-surface-container-low p-8">
         <h3 className="mb-3 text-[16px] font-medium uppercase tracking-[0.1em] text-on-surface-variant">
           Notifications
