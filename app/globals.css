@@ -1,0 +1,333 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggled by next-themes), not prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #fcf8ff;
+  --foreground: #1b1b24;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
+}
+
+/* --- Newsera design system (Material 3 token palette) --- */
+@theme {
+  /* Primary */
+  --color-primary: #4648d4;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #6063ee;
+  --color-on-primary-container: #fffbff;
+  --color-primary-fixed: #e1e0ff;
+  --color-primary-fixed-dim: #c0c1ff;
+  --color-on-primary-fixed: #07006c;
+  --color-on-primary-fixed-variant: #2f2ebe;
+  --color-inverse-primary: #c0c1ff;
+
+  /* Secondary */
+  --color-secondary: #6b38d4;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #8455ef;
+  --color-on-secondary-container: #fffbff;
+  --color-secondary-fixed: #e9ddff;
+  --color-secondary-fixed-dim: #d0bcff;
+  --color-on-secondary-fixed: #23005c;
+  --color-on-secondary-fixed-variant: #5516be;
+
+  /* Tertiary */
+  --color-tertiary: #7e3000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #a44100;
+  --color-on-tertiary-container: #ffd2be;
+  --color-tertiary-fixed: #ffdbcc;
+  --color-tertiary-fixed-dim: #ffb695;
+  --color-on-tertiary-fixed: #351000;
+  --color-on-tertiary-fixed-variant: #7b2f00;
+
+  /* Error */
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Surfaces */
+  --color-surface: #fcf8ff;
+  --color-surface-dim: #dcd8e5;
+  --color-surface-bright: #fcf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f2ff;
+  --color-surface-container: #f0ecf9;
+  --color-surface-container-high: #eae6f4;
+  --color-surface-container-highest: #e4e1ee;
+  --color-surface-variant: #e4e1ee;
+  --color-surface-tint: #494bd6;
+  --color-on-surface: #1b1b24;
+  --color-on-surface-variant: #464555;
+  --color-inverse-surface: #302f39;
+  --color-inverse-on-surface: #f3effc;
+
+  /* Outline & background */
+  --color-outline: #777587;
+  --color-outline-variant: #c7c4d8;
+  --color-on-background: #1b1b24;
+}
+
+/* ---------- Dark theme (derived Material 3 dark palette) ----------
+   Every component uses semantic tokens, so overriding the custom properties
+   here flips the entire app. */
+.dark {
+  --background: #131318;
+  --foreground: #e5e1e9;
+
+  /* Primary */
+  --color-primary: #c0c1ff;
+  --color-on-primary: #15179b;
+  --color-primary-container: #2f2ebe;
+  --color-on-primary-container: #e1e0ff;
+  --color-primary-fixed: #e1e0ff;
+  --color-primary-fixed-dim: #c0c1ff;
+  --color-on-primary-fixed: #07006c;
+  --color-on-primary-fixed-variant: #a9a9ff;
+  --color-inverse-primary: #4648d4;
+
+  /* Secondary */
+  --color-secondary: #d0bcff;
+  --color-on-secondary: #381e72;
+  --color-secondary-container: #4f378b;
+  --color-on-secondary-container: #eaddff;
+
+  /* Error */
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+
+  /* Surfaces */
+  --color-background: #131318;
+  --color-on-background: #e5e1e9;
+  --color-surface: #131318;
+  --color-surface-dim: #131318;
+  --color-surface-bright: #39383f;
+  --color-surface-container-lowest: #0e0e13;
+  --color-surface-container-low: #1b1b21;
+  --color-surface-container: #1f1f25;
+  --color-surface-container-high: #2a2930;
+  --color-surface-container-highest: #34343b;
+  --color-surface-variant: #46464f;
+  --color-surface-tint: #c0c1ff;
+  --color-on-surface: #e5e1e9;
+  --color-on-surface-variant: #c8c5d0;
+  --color-inverse-surface: #e5e1e9;
+  --color-inverse-on-surface: #303038;
+
+  /* Outline */
+  --color-outline: #918f9a;
+  --color-outline-variant: #46464f;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Frosted card used on auth pages */
+.glass-panel {
+  background: rgba(252, 248, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(199, 196, 216, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+/* Ambient radial wash: surface-container-high → background → surface-container-low */
+.bg-auth-radial {
+  background-image: radial-gradient(
+    circle at top right,
+    #eae6f4,
+    #fcf8ff,
+    #f5f2ff
+  );
+}
+
+/* Hide scrollbar (used by horizontal carousels) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Article card lift + inner image zoom on hover */
+.article-card-hover {
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.article-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+.article-card-hover img {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.article-card-hover:hover img {
+  transform: scale(1.05);
+}
+
+/* Section fade-up on load */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+/* Reading-history timeline items fade/slide in on load */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.history-item {
+  opacity: 0;
+  animation: fadeInSlideUp 0.5s ease forwards;
+}
+.history-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.history-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.history-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* Scroll-reveal: hidden until its wrapper enters the viewport */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.8s ease-out;
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* ---------- UX polish: motion, focus, micro-interactions ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Consistent, accessible keyboard focus across the app. Form fields keep their
+   own focus ring, so we suppress the extra outline there. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+/* Subtle page fade between route navigations. Opacity only — a transform here
+   would break position:fixed headers during the animation. */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-page-in {
+  animation: pageIn 0.35s ease both;
+}
+
+/* Card / panel entrance */
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-rise-in {
+  animation: riseIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Animated underline that grows from the left on hover (nav & footer links) */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+}

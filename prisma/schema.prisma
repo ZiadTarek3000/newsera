@@ -1,0 +1,161 @@
+// Newsera — Prisma schema (Postgres / Supabase)
+// Auth.js adapter models + app domain models.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Connection URLs live in prisma.config.ts (Prisma 7); the runtime client
+  // connects via the pg driver adapter in lib/db.ts.
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// ---------- Auth.js (NextAuth) adapter models ----------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? // only set for credential (email/password) accounts
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  bookmarks      Bookmark[]
+  readingHistory ReadingHistory[]
+  preferences    UserPreferences?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------- App domain models ----------
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  articles Article[]
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  externalId  String?   @unique // NewsAPI article id / source url hash
+  source      String
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String?
+  url         String? // link to the original article at the source
+  imageUrl    String?
+  publishedAt DateTime?
+  author      String?
+  views       Int       @default(0)
+  takeaways   String[]  @default([]) // optional editorial/AI highlights
+  createdAt   DateTime  @default(now())
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  bookmarks      Bookmark[]
+  readingHistory ReadingHistory[]
+  featured       FeaturedArticle?
+
+  @@index([categoryId])
+  @@index([publishedAt])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+  @@index([userId])
+}
+
+model ReadingHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  viewedAt  DateTime @default(now())
+  progress  Int      @default(0) // 0-100 % read
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+  @@index([userId, viewedAt])
+}
+
+model UserPreferences {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  theme              String   @default("system") // "light" | "dark" | "system"
+  favoriteCategories String[]
+  dailyBriefing      Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FeaturedArticle {
+  id        String   @id @default(cuid())
+  articleId String   @unique
+  section   String   @default("home") // home | analysis | trending
+  priority  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([section, priority])
+}
