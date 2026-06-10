@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import HeaderAuth from "../../_components/header-auth";
 import CategoryNav from "../../_components/category-nav";
 import ThemeToggle from "../../_components/theme-toggle";
@@ -9,6 +10,14 @@ import { MenuIcon } from "../../_components/icons";
 
 export default function ArticleHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close the mobile menu on navigation (reset during render, not an effect).
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setMenuOpen(false);
+  }
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl">

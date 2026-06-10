@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/actions/auth";
 import type { CurrentUser } from "@/types";
 import CategoryNav from "../../_components/category-nav";
@@ -16,6 +18,14 @@ type DashboardHeaderProps = {
 export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const initial = (user.name ?? user.email).charAt(0).toUpperCase();
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close the mobile menu on navigation (reset during render, not an effect).
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setMenuOpen(false);
+  }
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl">
@@ -32,13 +42,7 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
 
         <div className="flex items-center gap-4 sm:gap-6">
           <form action={logoutAction}>
-            <button
-              type="submit"
-              className="flex items-center gap-1 text-[12px] font-semibold tracking-[0.1em] text-on-surface-variant transition-colors hover:text-error active:scale-95"
-            >
-              <LogoutIcon className="size-[18px]" />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
+            <LogoutButton />
           </form>
           <ThemeToggle className="text-primary transition-opacity duration-300 hover:opacity-80 active:scale-95" />
           <div className="flex size-9 items-center justify-center overflow-hidden rounded-full border border-outline-variant bg-surface-container-high text-[15px] font-semibold text-on-surface-variant sm:size-10">
@@ -73,5 +77,20 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
         />
       )}
     </header>
+  );
+}
+
+// Submit button with instant pending feedback while the sign-out action runs.
+function LogoutButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="flex items-center gap-1 text-[12px] font-semibold tracking-[0.1em] text-on-surface-variant transition-colors hover:text-error active:scale-95 disabled:opacity-60"
+    >
+      <LogoutIcon className="size-[18px]" />
+      <span className="hidden sm:inline">{pending ? "Signing out…" : "Logout"}</span>
+    </button>
   );
 }

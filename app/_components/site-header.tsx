@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import HeaderAuth from "./header-auth";
 import CategoryNav from "./category-nav";
 import ThemeToggle from "./theme-toggle";
@@ -9,6 +10,16 @@ import { BookmarksIcon, MenuIcon } from "./icons";
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close the mobile menu as soon as a navigation happens, so it never lingers
+  // open over the newly-loaded page. Reset during render (the React-recommended
+  // alternative to a state-setting effect) so it's applied before paint.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setMenuOpen(false);
+  }
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-outline-variant/30 bg-surface/80 shadow-sm backdrop-blur-xl">
