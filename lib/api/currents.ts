@@ -2,11 +2,14 @@ import "server-only";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { slugify } from "@/lib/utils";
+import { classifyCategory } from "@/lib/content/classify";
 
 const CURRENTS_BASE = "https://api.currentsapi.services/v1";
 
+// "general" is fetched LAST so specific categories claim their articles first
+// (title de-duplication keeps the first occurrence). Whatever lands in
+// "general" is then re-classified by keyword where possible.
 export const CURRENTS_CATEGORIES = [
-  "general",
   "world",
   "business",
   "technology",
@@ -14,6 +17,7 @@ export const CURRENTS_CATEGORIES = [
   "health",
   "entertainment",
   "sports",
+  "general",
 ] as const;
 
 export type CurrentsCategory = (typeof CURRENTS_CATEGORIES)[number];
@@ -93,7 +97,7 @@ function normalize(
     imageUrl: cleanImage(a.image),
     publishedAt: parsePublished(a.published),
     author: a.author ?? null,
-    categorySlug,
+    categorySlug: classifyCategory(categorySlug, title, description),
   };
 }
 

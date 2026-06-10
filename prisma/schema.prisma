@@ -99,6 +99,8 @@ model Article {
 
   @@index([categoryId])
   @@index([publishedAt])
+  // Trending / recommended / dashboard suggestions all sort by views then date.
+  @@index([views, publishedAt])
 }
 
 model Bookmark {

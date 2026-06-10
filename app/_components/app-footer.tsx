@@ -1,11 +1,10 @@
 import Link from "next/link";
 
 const footerLinks = [
-  { label: "About", href: "#" },
-  { label: "Archives", href: "#" },
-  { label: "Contact", href: "#" },
-  { label: "Terms", href: "/terms" },
+  { label: "Home", href: "/" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
 ];
 
 export default function AppFooter() {
@@ -15,7 +14,7 @@ export default function AppFooter() {
         <div className="font-serif text-[32px] font-semibold text-on-surface">
           NEWSERA
         </div>
-        <nav className="flex flex-wrap justify-center gap-x-12 gap-y-4">
+        <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4 sm:gap-x-12">
           {footerLinks.map((link) => (
             <Link
               key={link.label}
@@ -27,7 +26,7 @@ export default function AppFooter() {
           ))}
         </nav>
         <p className="text-[12px] font-semibold tracking-[0.1em] text-on-surface-variant">
-          © 2024 NEWSERA. All rights reserved.
+          © 2026 NEWSERA. All rights reserved.
         </p>
       </div>
     </footer>

@@ -10,10 +10,10 @@ export default function RegisterPage() {
   const [state, formAction, pending] = useActionState(registerAction, undefined);
 
   return (
-    <div className="flex min-h-screen flex-grow items-center justify-center bg-background p-6 text-on-background">
-      <div className="animate-rise-in w-full max-w-[480px] rounded-lg border border-outline-variant/30 bg-surface-container-lowest p-12 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
-        <header className="mb-12 text-center">
-          <h1 className="mb-1 text-[48px] leading-[1.1]">
+    <div className="flex min-h-screen flex-grow items-center justify-center bg-background p-4 text-on-background sm:p-6">
+      <div className="animate-rise-in w-full max-w-[480px] rounded-lg border border-outline-variant/30 bg-surface-container-lowest p-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-10 md:p-12">
+        <header className="mb-10 text-center sm:mb-12">
+          <h1 className="mb-1 text-[36px] leading-[1.1] sm:text-[48px]">
             <Logo className="uppercase" />
           </h1>
           <p className="text-[16px] leading-[1.6] text-on-surface-variant">

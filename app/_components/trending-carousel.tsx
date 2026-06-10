@@ -19,11 +19,11 @@ export default function TrendingCarousel({ articles }: TrendingCarouselProps) {
   };
 
   return (
-    <section className="animate-fade-up overflow-hidden bg-surface-container-low py-32 delay-200">
-      <div className="mx-auto max-w-[1440px] px-8">
-        <div className="mb-10 flex items-center justify-between">
-          <h2 className="flex items-center gap-3 font-serif text-[32px] font-semibold">
-            <TrendingUpIcon className="size-7 text-primary" />
+    <section className="animate-fade-up overflow-hidden bg-surface-container-low py-16 delay-200 sm:py-20 lg:py-28">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 flex items-center justify-between gap-4 sm:mb-10">
+          <h2 className="flex items-center gap-3 font-serif text-[26px] font-semibold sm:text-[32px]">
+            <TrendingUpIcon className="size-6 text-primary sm:size-7" />
             Trending Now
           </h2>
           <div className="flex gap-2">
@@ -53,7 +53,7 @@ export default function TrendingCarousel({ articles }: TrendingCarouselProps) {
           {articles.map((article) => (
             <div
               key={article.id}
-              className="group relative min-w-[320px] snap-start rounded-xl bg-surface-container-lowest p-4 shadow-sm transition-shadow hover:shadow-md md:min-w-[400px]"
+              className="group relative min-w-[280px] snap-start rounded-xl bg-surface-container-lowest p-4 shadow-sm transition-shadow hover:shadow-md sm:min-w-[320px] md:min-w-[400px]"
             >
               <Link
                 href={`/article/${article.slug}`}

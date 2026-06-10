@@ -1,7 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db";
 import { relativeTime } from "@/lib/utils";
-import { articleToSummary } from "@/lib/data/articles";
+import { articleToSummary, summarySelect } from "@/lib/data/articles";
 import type { ArticleSummary, HistoryEntryDTO } from "@/types";
 
 export type UserPreferencesDTO = {
@@ -17,7 +17,7 @@ export async function getUserBookmarks(
     const rows = await prisma.bookmark.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
-      include: { article: { include: { category: true } } },
+      select: { article: { select: summarySelect } },
     });
     return rows.map((r) => articleToSummary(r.article));
   } catch (error) {
@@ -35,22 +35,25 @@ export async function getUserHistory(
       where: { userId },
       orderBy: { viewedAt: "desc" },
       take,
-      include: { article: { include: { category: true } } },
+      select: {
+        articleId: true,
+        viewedAt: true,
+        article: {
+          select: {
+            slug: true,
+            title: true,
+            category: { select: { name: true } },
+          },
+        },
+      },
     });
-    return rows.map((r) => {
-      const categoryName = r.article.category?.name ?? "News";
-      const finished = r.progress >= 100;
-      return {
-        articleId: r.articleId,
-        slug: r.article.slug,
-        title: r.article.title,
-        timestamp: relativeTime(r.viewedAt),
-        detail: finished
-          ? `Finished Reading • ${categoryName}`
-          : `${r.progress}% completion • ${categoryName}`,
-        status: finished ? "finished" : "reading",
-      };
-    });
+    return rows.map((r) => ({
+      articleId: r.articleId,
+      slug: r.article.slug,
+      title: r.article.title,
+      timestamp: relativeTime(r.viewedAt),
+      detail: r.article.category?.name ?? "News",
+    }));
   } catch (error) {
     console.error("getUserHistory failed:", error);
     return [];
@@ -75,7 +78,7 @@ export async function getDashboardSuggestions(
         ...(favs.length ? { category: { slug: { in: favs } } } : {}),
       },
       orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
-      include: { category: true },
+      select: summarySelect,
       take,
     });
     return rows.map((a) => articleToSummary(a));

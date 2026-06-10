@@ -7,29 +7,16 @@ import {
   getUserHistory,
   getUserPreferences,
 } from "@/lib/data/dashboard";
-import ScrollProgress from "../_components/scroll-progress";
 import AppFooter from "../_components/app-footer";
 import BookmarkButton from "../_components/bookmark-button";
 import ThemeSync from "../_components/theme-sync";
 import DashboardHeader from "./_components/dashboard-header";
-import PreferencesPanel from "./_components/preferences-panel";
 import SavedArticles from "./_components/saved-articles";
 import {
   CheckCircleIcon,
   HistoryIcon,
-  RadioCheckedIcon,
   RecommendIcon,
-  SettingsIcon,
 } from "../_components/icons";
-
-const MAIN_TOPICS = [
-  { name: "Technology", slug: "technology" },
-  { name: "Business", slug: "business" },
-  { name: "Science", slug: "science" },
-  { name: "Politics", slug: "politics" },
-  { name: "Culture", slug: "culture" },
-  { name: "Health", slug: "health" },
-];
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -44,16 +31,15 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <ScrollProgress />
       <ThemeSync initialTheme={prefs.theme} />
       <DashboardHeader user={user} />
 
-      <main className="mx-auto min-h-screen max-w-[1280px] px-5 pb-24 pt-32 md:px-16">
-        <section className="mb-12">
-          <h1 className="mb-2 font-serif text-[40px] font-bold leading-[1.2] tracking-[-0.02em] text-on-surface md:text-[64px] md:leading-[1.1]">
+      <main className="mx-auto min-h-screen max-w-[1280px] px-4 pb-20 pt-28 sm:px-6 sm:pb-24 sm:pt-32 md:px-16">
+        <section className="mb-10 sm:mb-12">
+          <h1 className="mb-2 font-serif text-[32px] font-bold leading-[1.15] tracking-[-0.02em] text-on-surface sm:text-[40px] md:text-[64px] md:leading-[1.1]">
             Member Dashboard
           </h1>
-          <p className="text-[18px] text-on-surface-variant">
+          <p className="text-[16px] text-on-surface-variant sm:text-[18px]">
             Welcome back, {firstName}. Here is your curated reading digest.
           </p>
         </section>
@@ -76,11 +62,7 @@ export default async function DashboardPage() {
                       className="history-item group relative mb-6 pl-8"
                     >
                       <div className="absolute left-0 top-1 flex size-6 items-center justify-center bg-surface-container-low">
-                        {entry.status === "reading" ? (
-                          <RadioCheckedIcon className="size-[18px] text-secondary" />
-                        ) : (
-                          <CheckCircleIcon className="size-[18px] text-outline-variant transition-colors group-hover:text-secondary" />
-                        )}
+                        <CheckCircleIcon className="size-[18px] text-outline-variant transition-colors group-hover:text-secondary" />
                       </div>
                       <span className="mb-1 block text-[12px] font-semibold tracking-[0.1em] text-on-surface-variant opacity-70">
                         {entry.timestamp}
@@ -111,7 +93,7 @@ export default async function DashboardPage() {
               <RecommendIcon className="size-6 text-secondary" />
               Suggested for You
             </h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
               {suggestions.map((article) => (
                 <div
                   key={article.id}
@@ -147,6 +129,7 @@ export default async function DashboardPage() {
                       </span>
                       <BookmarkButton
                         articleId={article.id}
+                        article={article}
                         className="text-primary"
                         iconClassName="size-5"
                       />
@@ -158,19 +141,6 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        <section className="mt-20">
-          <h2 className="mb-6 flex items-center gap-2 font-serif text-[28px] font-semibold">
-            <SettingsIcon className="size-6 text-secondary" />
-            Platform Preferences
-          </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <PreferencesPanel
-              topics={MAIN_TOPICS}
-              favorites={prefs.favoriteCategories}
-              dailyBriefing={prefs.dailyBriefing}
-            />
-          </div>
-        </section>
       </main>
 
       <AppFooter />

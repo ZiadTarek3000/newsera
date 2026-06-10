@@ -5,7 +5,11 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { prisma } from "@/lib/db";
 import { signIn, signOut } from "@/lib/auth/auth";
-import { sendVerificationEmail } from "@/lib/auth/verification";
+import {
+  resetPasswordWithToken,
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "@/lib/auth/verification";
 
 export type AuthFormState =
   | {
@@ -134,6 +138,69 @@ export async function resendVerificationAction(
     success: true,
     email,
     message: "If that account needs verification, a new link is on its way.",
+  };
+}
+
+const forgotSchema = z.object({
+  email: z.string().email("Enter a valid email address."),
+});
+
+export async function forgotPasswordAction(
+  _prev: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const parsed = forgotSchema.safeParse({ email: formData.get("email") });
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+
+  try {
+    await sendPasswordResetEmail(parsed.data.email);
+  } catch (error) {
+    console.error("Failed to send password reset email:", error);
+  }
+
+  // Always report success to avoid revealing whether the account exists.
+  return {
+    success: true,
+    email: parsed.data.email,
+    message: "If an account exists for that email, a reset link is on its way.",
+  };
+}
+
+const resetSchema = z
+  .object({
+    token: z.string().min(1, "Reset token is missing."),
+    password: z.string().min(8, "Password must be at least 8 characters."),
+    confirm: z.string().min(1, "Please confirm your password."),
+  })
+  .refine((d) => d.password === d.confirm, {
+    message: "Passwords do not match.",
+    path: ["confirm"],
+  });
+
+export async function resetPasswordAction(
+  _prev: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const parsed = resetSchema.safeParse({
+    token: formData.get("token"),
+    password: formData.get("password"),
+    confirm: formData.get("confirm"),
+  });
+  if (!parsed.success) return { errors: fieldErrors(parsed.error) };
+
+  const result = await resetPasswordWithToken(
+    parsed.data.token,
+    parsed.data.password,
+  );
+
+  if (result === "success") {
+    return { success: true, message: "Your password has been updated." };
+  }
+  return {
+    message:
+      result === "expired"
+        ? "This reset link has expired. Please request a new one."
+        : "This reset link is invalid. Please request a new one.",
   };
 }
 

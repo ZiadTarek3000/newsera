@@ -5,6 +5,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   DIRECT_URL: z.string().min(1, "DIRECT_URL is required"),
   AUTH_SECRET: z.string().min(1, "AUTH_SECRET is required"),
+  // Optional: pin the canonical origin used to build OAuth callback URLs.
+  // Leave unset to auto-detect from the request host (trustHost). Set it in
+  // production only if auto-detection picks the wrong host (e.g. behind a proxy
+  // with a custom domain): AUTH_URL="https://yourdomain.com".
+  AUTH_URL: z.string().url().optional(),
   AUTH_GOOGLE_ID: z.string().optional(),
   AUTH_GOOGLE_SECRET: z.string().optional(),
   CURRENTS_API_KEY: z.string().optional(),

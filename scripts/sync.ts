@@ -2,11 +2,12 @@ import "dotenv/config";
 import { z } from "zod";
 import { prisma } from "../lib/db";
 import { slugify } from "../lib/utils";
+import { classifyCategory } from "../lib/content/classify";
 
 const CURRENTS_BASE = "https://api.currentsapi.services/v1";
 
+// "general" is fetched last so specific categories claim their articles first.
 const SYNC_CATEGORIES = [
-  "general",
   "world",
   "business",
   "technology",
@@ -14,6 +15,7 @@ const SYNC_CATEGORIES = [
   "health",
   "entertainment",
   "sports",
+  "general",
 ] as const;
 
 type Category = (typeof SYNC_CATEGORIES)[number];
@@ -78,12 +80,13 @@ async function fetchCategory(category: Category, max = 10, attempt = 1): Promise
       `Currents ${category} request failed: ${res.status} ${json.message ?? ""}`.trim(),
     );
   }
-  return normalizeNews(json.news, max);
+  return normalizeNews(json.news, max, category);
 }
 
 function normalizeNews(
   news: z.infer<typeof articleSchema>[],
   max: number,
+  searchCategory: string,
 ) {
   return news
     .filter((a) => a.title && a.title !== "None")
@@ -104,6 +107,7 @@ function normalizeNews(
         publishedAt: parsePublished(a.published),
         author: a.author ?? null,
         source: a.author?.trim() || sourceFromUrl(a.url),
+        categorySlug: classifyCategory(searchCategory, title, description),
       };
     });
 }
@@ -111,48 +115,53 @@ function normalizeNews(
 async function run() {
   let upserts = 0;
   const errors: string[] = [];
+  // The Currents feed returns the same story under multiple categories. Track
+  // normalized titles across the whole run so each headline is stored once.
+  const seenTitles = new Set<string>();
+  // Cache category rows; articles are filed under their classified slug.
+  const categoryIdCache = new Map<string, string>();
+
+  async function categoryId(slug: string): Promise<string> {
+    const cached = categoryIdCache.get(slug);
+    if (cached) return cached;
+    const cat = await prisma.category.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        name: slug.charAt(0).toUpperCase() + slug.slice(1),
+        slug,
+      },
+    });
+    categoryIdCache.set(slug, cat.id);
+    return cat.id;
+  }
 
   for (const category of SYNC_CATEGORIES) {
     try {
       await sleep(300);
       const articles = await fetchCategory(category, 10);
-      const cat = await prisma.category.upsert({
-        where: { slug: category },
-        update: {},
-        create: {
-          name: category.charAt(0).toUpperCase() + category.slice(1),
-          slug: category,
-        },
-      });
 
       for (const a of articles) {
+        const titleKey = slugify(a.title);
+        if (titleKey && seenTitles.has(titleKey)) continue;
+        if (titleKey) seenTitles.add(titleKey);
         try {
+          const catId = await categoryId(a.categorySlug);
+          const data = {
+            title: a.title,
+            excerpt: a.excerpt,
+            content: a.content,
+            url: a.url,
+            imageUrl: a.imageUrl,
+            publishedAt: a.publishedAt,
+            author: a.author,
+            source: a.source,
+            categoryId: catId,
+          };
           await prisma.article.upsert({
             where: { externalId: a.externalId },
-            update: {
-              title: a.title,
-              excerpt: a.excerpt,
-              content: a.content,
-              url: a.url,
-              imageUrl: a.imageUrl,
-              publishedAt: a.publishedAt,
-              author: a.author,
-              source: a.source,
-              categoryId: cat.id,
-            },
-            create: {
-              externalId: a.externalId,
-              slug: a.slug,
-              title: a.title,
-              excerpt: a.excerpt,
-              content: a.content,
-              url: a.url,
-              imageUrl: a.imageUrl,
-              publishedAt: a.publishedAt,
-              author: a.author,
-              source: a.source,
-              categoryId: cat.id,
-            },
+            update: data,
+            create: { externalId: a.externalId, slug: a.slug, ...data },
           });
           upserts++;
         } catch {

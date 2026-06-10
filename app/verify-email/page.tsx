@@ -45,9 +45,9 @@ export default async function VerifyEmailPage({
   const ok = result === "verified" || result === "already";
 
   return (
-    <div className="flex min-h-screen flex-grow items-center justify-center bg-background p-6 text-on-background">
-      <div className="animate-rise-in w-full max-w-[480px] rounded-lg border border-outline-variant/30 bg-surface-container-lowest p-12 text-center shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
-        <h1 className="mb-8 text-[40px] leading-[1.1]">
+    <div className="flex min-h-screen flex-grow items-center justify-center bg-background p-4 text-on-background sm:p-6">
+      <div className="animate-rise-in w-full max-w-[480px] rounded-lg border border-outline-variant/30 bg-surface-container-lowest p-6 text-center shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-10 md:p-12">
+        <h1 className="mb-8 text-[36px] leading-[1.1] sm:text-[40px]">
           <Logo className="uppercase" />
         </h1>
 

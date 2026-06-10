@@ -28,12 +28,23 @@ export type BriefDTO = {
   excerpt: string;
 };
 
+export type ArticlesPage = {
+  articles: ArticleSummary[];
+  hasMore: boolean;
+  total: number;
+};
+
 export type HomeFeed = {
   hero: ArticleSummary | null;
   trending: ArticleSummary[];
-  latest: ArticleSummary[];
   analysis: ArticleSummary | null;
   businessBriefs: BriefDTO[];
+};
+
+export type HomePageData = HomeFeed & {
+  categories: CategoryDTO[];
+  initialArticles: ArticleSummary[];
+  initialHasMore: boolean;
 };
 
 export type CategoryDTO = {
@@ -48,7 +59,6 @@ export type HistoryEntryDTO = {
   title: string;
   timestamp: string;
   detail: string;
-  status: "reading" | "finished";
 };
 
 export type CurrentUser = {

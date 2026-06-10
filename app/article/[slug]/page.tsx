@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import AppFooter from "../../_components/app-footer";
 import BookmarkButton from "../../_components/bookmark-button";
 import Reveal from "../../_components/reveal";
-import ScrollProgress from "../../_components/scroll-progress";
 import ArticleHeader from "../_components/article-header";
 import RecordView from "../_components/record-view";
 import {
@@ -69,9 +68,9 @@ function renderBlocks(content: string) {
     return (
       <Reveal key={i}>
         <p
-          className={`text-[18px] leading-relaxed text-on-surface-variant ${
+          className={`text-[17px] leading-relaxed text-on-surface-variant sm:text-[18px] ${
             dropCap
-              ? "first-letter:float-left first-letter:mr-4 first-letter:mt-2 first-letter:font-serif first-letter:text-7xl first-letter:font-bold first-letter:text-primary"
+              ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:font-serif first-letter:text-6xl first-letter:font-bold first-letter:text-primary sm:first-letter:mr-4 sm:first-letter:mt-2 sm:first-letter:text-7xl"
               : ""
           }`}
         >
@@ -111,12 +110,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ScrollProgress />
       <ArticleHeader />
       <RecordView articleId={article.id} />
 
       <main className="pt-20">
-        <header className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
+        <header className="relative h-[60vh] min-h-[420px] w-full overflow-hidden sm:h-[70vh] sm:min-h-[500px]">
           <Image
             src={article.image}
             alt={article.alt}
@@ -126,7 +124,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-full p-8 md:p-16">
+          <div className="absolute bottom-0 left-0 w-full p-6 sm:p-8 md:p-16">
             <div className="mx-auto max-w-[1280px]">
               <div className="mb-6 flex items-center gap-4">
                 <span className="inline-block rounded-sm bg-primary px-3 py-1 text-[12px] font-semibold tracking-[0.1em] text-white">
@@ -138,10 +136,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   iconClassName="size-5"
                 />
               </div>
-              <h1 className="mb-8 max-w-4xl font-serif text-[40px] font-bold leading-tight text-white md:text-[64px] md:tracking-[-0.02em]">
+              <h1 className="mb-6 max-w-4xl font-serif text-[28px] font-bold leading-tight text-white sm:mb-8 sm:text-[40px] md:text-[56px] md:tracking-[-0.02em] lg:text-[64px]">
                 {article.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-6 text-[12px] font-semibold tracking-[0.1em] text-white/90">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-semibold tracking-[0.1em] text-white/90 sm:gap-6">
                 <div className="flex items-center gap-2">
                   <GlobeIcon className="size-5" />
                   <span>Source: {article.source}</span>
@@ -158,10 +156,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </header>
 
-        <article className="mx-auto max-w-3xl px-6 py-24">
+        <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
           {article.takeaways.length > 0 && (
             <Reveal>
-              <div className="mb-16 flex items-start gap-6 rounded-xl border border-primary/20 bg-primary/5 p-8 shadow-sm">
+              <div className="mb-12 flex items-start gap-4 rounded-xl border border-primary/20 bg-primary/5 p-6 shadow-sm sm:mb-16 sm:gap-6 sm:p-8">
                 <div className="flex-shrink-0 rounded-lg bg-primary p-3 text-on-primary">
                   <SparklesIcon />
                 </div>
@@ -208,14 +206,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </article>
 
         {related.length > 0 && (
-          <section className="bg-surface-container py-24">
-            <div className="mx-auto max-w-[1280px] px-8">
-              <div className="mb-12 flex items-end justify-between">
-                <h2 className="font-serif text-[32px] font-semibold">
+          <section className="bg-surface-container py-16 sm:py-20 lg:py-24">
+            <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+              <div className="mb-8 flex items-end justify-between sm:mb-12">
+                <h2 className="font-serif text-[26px] font-semibold sm:text-[32px]">
                   Further Analysis
                 </h2>
               </div>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
                 {related.map((card) => (
                   <Reveal key={card.id}>
                     <Link
@@ -252,9 +250,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         )}
 
         {recommended.length > 0 && (
-          <section className="overflow-hidden bg-background py-24">
-            <div className="mx-auto max-w-[1280px] px-8">
-              <h2 className="mb-12 font-serif text-[32px] font-semibold">
+          <section className="overflow-hidden bg-background py-16 sm:py-20 lg:py-24">
+            <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+              <h2 className="mb-8 font-serif text-[26px] font-semibold sm:mb-12 sm:text-[32px]">
                 Recommended for You
               </h2>
               <div className="hide-scrollbar flex snap-x gap-8 overflow-x-auto pb-8">

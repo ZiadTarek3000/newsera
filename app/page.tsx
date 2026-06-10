@@ -1,40 +1,45 @@
 import Image from "next/image";
 import Link from "next/link";
-import ArticleCard from "./_components/article-card";
 import BookmarkButton from "./_components/bookmark-button";
+import LatestFeed from "./_components/latest-feed";
 import NewsletterForm from "./_components/newsletter-form";
-import ScrollProgress from "./_components/scroll-progress";
 import SiteFooter from "./_components/site-footer";
 import SiteHeader from "./_components/site-header";
 import TrendingCarousel from "./_components/trending-carousel";
-import { ArrowRightIcon, ChevronDownIcon, MailIcon } from "./_components/icons";
-import { getHomeFeed } from "@/lib/data/articles";
+import { ArrowRightIcon, MailIcon } from "./_components/icons";
+import { getHomePageData } from "@/lib/data/articles";
 
 export const revalidate = 300;
 
 export default async function Home() {
-  const { hero, trending, latest, analysis, businessBriefs } =
-    await getHomeFeed();
+  const {
+    hero,
+    trending,
+    analysis,
+    businessBriefs,
+    categories,
+    initialArticles,
+    initialHasMore,
+  } = await getHomePageData();
 
   return (
     <div className="selection:bg-primary-fixed selection:text-on-primary-fixed">
-      <ScrollProgress />
       <SiteHeader />
 
       <main className="pt-20">
         <section className="relative flex min-h-[80vh] w-full items-center overflow-hidden bg-surface-container-lowest">
           {hero ? (
-            <div className="animate-fade-up mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-12 px-8 py-16 lg:grid-cols-12">
-              <div className="z-10 space-y-6 lg:col-span-7">
+            <div className="animate-fade-up mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:px-8">
+              <div className="z-10 space-y-5 sm:space-y-6 lg:col-span-7">
                 <span className="inline-block rounded-full bg-primary px-3 py-1 text-[12px] font-semibold tracking-[0.1em] text-on-primary shadow-sm">
                   {hero.category}
                 </span>
                 <Link href={`/article/${hero.slug}`} className="block">
-                  <h1 className="max-w-2xl font-serif text-[40px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface transition-colors hover:text-primary md:text-[64px]">
+                  <h1 className="max-w-2xl font-serif text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-on-surface transition-colors hover:text-primary sm:text-[40px] md:text-[56px] lg:text-[64px]">
                     {hero.title}
                   </h1>
                 </Link>
-                <p className="max-w-xl text-[18px] leading-relaxed text-on-surface-variant">
+                <p className="max-w-xl text-[16px] leading-relaxed text-on-surface-variant sm:text-[18px]">
                   {hero.excerpt}
                 </p>
                 <div className="flex max-w-xl items-center justify-between gap-4 pt-4">
@@ -83,8 +88,8 @@ export default async function Home() {
               </div>
             </div>
           ) : (
-            <div className="mx-auto max-w-[1440px] px-8 py-32 text-center">
-              <h1 className="font-serif text-[40px] font-bold text-on-surface">
+            <div className="mx-auto max-w-[1440px] px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
+              <h1 className="font-serif text-[32px] font-bold text-on-surface sm:text-[40px]">
                 No stories yet
               </h1>
               <p className="mt-4 text-[18px] text-on-surface-variant">
@@ -96,46 +101,23 @@ export default async function Home() {
 
         {trending.length > 0 && <TrendingCarousel articles={trending} />}
 
-        <section className="animate-fade-up mx-auto max-w-[1440px] px-8 py-32 delay-300">
-          <div className="mb-12 border-b border-outline-variant pb-6">
-            <h2 className="font-serif text-[32px] font-semibold">
-              Latest Updates
-            </h2>
-          </div>
-          {latest.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 gap-x-12 gap-y-20 md:grid-cols-2 lg:grid-cols-3">
-                {latest.map((article) => (
-                  <ArticleCard key={article.id} article={article} />
-                ))}
-              </div>
-              <div className="mt-20 flex justify-center">
-                <button
-                  type="button"
-                  className="group rounded-lg border border-outline-variant px-12 py-4 text-[12px] font-semibold tracking-[0.1em] shadow-sm transition-all hover:border-primary hover:bg-surface-container-low hover:text-primary active:scale-[0.99]"
-                >
-                  Load More Updates
-                  <ChevronDownIcon className="ml-2 inline-block size-5 align-middle transition-transform group-hover:translate-y-1" />
-                </button>
-              </div>
-            </>
-          ) : (
-            <p className="text-[16px] text-on-surface-variant">
-              No articles to show yet.
-            </p>
-          )}
-        </section>
+        <LatestFeed
+          initialArticles={initialArticles}
+          initialHasMore={initialHasMore}
+          categories={categories}
+          excludeId={hero?.id}
+        />
 
         {(businessBriefs.length > 0 || analysis) && (
-          <section className="animate-fade-up bg-surface-container-highest py-24 delay-400">
-            <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-20 px-8 lg:grid-cols-2">
+          <section className="animate-fade-up bg-surface-container-highest py-16 delay-400 sm:py-20 lg:py-24">
+            <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
               <div>
                 <div className="mb-8 flex items-center justify-between">
-                  <h2 className="font-serif text-[40px] font-bold italic">
+                  <h2 className="font-serif text-[32px] font-bold italic sm:text-[40px]">
                     Business &amp; Economy
                   </h2>
                 </div>
-                <div className="space-y-12">
+                <div className="space-y-10 sm:space-y-12">
                   {businessBriefs.map((item) => (
                     <Link
                       key={item.slug}
@@ -163,7 +145,7 @@ export default async function Home() {
               </div>
 
               {analysis && (
-                <div className="flex transform flex-col rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-12 shadow-md transition-transform duration-500 hover:-translate-y-1">
+                <div className="flex transform flex-col rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-6 shadow-md transition-transform duration-500 hover:-translate-y-1 sm:p-8 lg:p-12">
                   <div className="mb-6 flex items-start justify-between">
                     <span className="block text-[12px] font-semibold uppercase tracking-[0.2em] text-primary">
                       {analysis.category}
@@ -186,7 +168,7 @@ export default async function Home() {
                     />
                   </Link>
                   <Link href={`/article/${analysis.slug}`}>
-                    <h3 className="mb-4 font-serif text-[32px] font-bold transition-colors hover:text-primary">
+                    <h3 className="mb-4 font-serif text-[26px] font-bold transition-colors hover:text-primary sm:text-[32px]">
                       {analysis.title}
                     </h3>
                   </Link>
@@ -215,13 +197,13 @@ export default async function Home() {
           </section>
         )}
 
-        <section className="animate-fade-up bg-surface py-32 text-on-surface">
-          <div className="mx-auto max-w-[720px] px-8 text-center">
-            <MailIcon className="mx-auto mb-6 block size-12 text-primary" />
-            <h2 className="mb-6 font-serif text-[48px] font-bold">
+        <section className="animate-fade-up bg-surface py-20 text-on-surface sm:py-24 lg:py-32">
+          <div className="mx-auto max-w-[720px] px-4 text-center sm:px-6 lg:px-8">
+            <MailIcon className="mx-auto mb-6 block size-10 text-primary sm:size-12" />
+            <h2 className="mb-6 font-serif text-[32px] font-bold sm:text-[40px] md:text-[48px]">
               NEWSERA Daily Digest
             </h2>
-            <p className="mb-10 text-[18px] text-on-surface-variant">
+            <p className="mb-10 text-[16px] text-on-surface-variant sm:text-[18px]">
               Get the top headlines and trending stories across your favorite
               categories delivered directly to your inbox every morning.
             </p>

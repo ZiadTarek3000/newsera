@@ -2,70 +2,71 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { prisma } from "@/lib/db";
 import { hasNews } from "@/lib/env";
-import { fetchCategory, type CurrentsCategory } from "@/lib/api/currents";
+import { slugify } from "@/lib/utils";
+import {
+  CURRENTS_CATEGORIES,
+  fetchCategory,
+  type CurrentsCategory,
+} from "@/lib/api/currents";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
-const SYNC_CATEGORIES: CurrentsCategory[] = [
-  "general",
-  "world",
-  "business",
-  "technology",
-  "science",
-  "health",
-  "entertainment",
-  "sports",
-];
+const SYNC_CATEGORIES: CurrentsCategory[] = [...CURRENTS_CATEGORIES];
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function ingest() {
   let upserts = 0;
   const errors: string[] = [];
+  // The Currents feed returns the same story under multiple categories. Track
+  // normalized titles across the whole run so each headline is stored once.
+  const seenTitles = new Set<string>();
+  // Cache category rows by slug; articles are filed under their classified slug.
+  const categoryIdCache = new Map<string, string>();
+
+  async function categoryId(slug: string): Promise<string> {
+    const cached = categoryIdCache.get(slug);
+    if (cached) return cached;
+    const cat = await prisma.category.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        name: slug.charAt(0).toUpperCase() + slug.slice(1),
+        slug,
+      },
+    });
+    categoryIdCache.set(slug, cat.id);
+    return cat.id;
+  }
 
   for (const category of SYNC_CATEGORIES) {
     try {
       await sleep(300);
       const articles = await fetchCategory(category, 10);
-      const cat = await prisma.category.upsert({
-        where: { slug: category },
-        update: {},
-        create: {
-          name: category.charAt(0).toUpperCase() + category.slice(1),
-          slug: category,
-        },
-      });
 
       for (const a of articles) {
+        const titleKey = slugify(a.title);
+        if (titleKey && seenTitles.has(titleKey)) continue;
+        if (titleKey) seenTitles.add(titleKey);
         try {
+          const catId = await categoryId(a.categorySlug);
+          const data = {
+            title: a.title,
+            excerpt: a.excerpt,
+            content: a.content,
+            url: a.url,
+            imageUrl: a.imageUrl,
+            publishedAt: a.publishedAt,
+            author: a.author,
+            source: a.source,
+            categoryId: catId,
+          };
           await prisma.article.upsert({
             where: { externalId: a.externalId },
-            update: {
-              title: a.title,
-              excerpt: a.excerpt,
-              content: a.content,
-              url: a.url,
-              imageUrl: a.imageUrl,
-              publishedAt: a.publishedAt,
-              author: a.author,
-              source: a.source,
-              categoryId: cat.id,
-            },
-            create: {
-              externalId: a.externalId,
-              slug: a.slug,
-              title: a.title,
-              excerpt: a.excerpt,
-              content: a.content,
-              url: a.url,
-              imageUrl: a.imageUrl,
-              publishedAt: a.publishedAt,
-              author: a.author,
-              source: a.source,
-              categoryId: cat.id,
-            },
+            update: data,
+            create: { externalId: a.externalId, slug: a.slug, ...data },
           });
           upserts++;
         } catch {
